@@ -6,14 +6,20 @@
 //
 
 import UIKit
+import Firebase
 import MapKit
-import Foundation
+
+private let reuseIdentifier = "LocationCell"
 
 class HomeVC: UIViewController {
     
     // MARK: - Properties
     
     private let mapView = MKMapView()
+    
+    private let inputActivationView = LocationInputActivationView()
+    private let locationInputView = LocationInputView()
+    private let tableView = UITableView()
     
     
     // MARK: - LifeCycel
@@ -22,6 +28,10 @@ class HomeVC: UIViewController {
         configureMapView()
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        checkIfAuthenticated()
+    }
     
     // MARK: - Selectors
     
@@ -32,10 +42,27 @@ class HomeVC: UIViewController {
         mapView.frame = view.frame
     }
     
-    // MARK: - Properties
-
+    func checkIfAuthenticated() {
+        if Auth.auth().currentUser == nil {
+            let vc = LoginVC()
+            let nav = UINavigationController(rootViewController: vc)
+            nav.modalPresentationStyle = .fullScreen
+            present(nav, animated: false, completion: nil)
+        }
+    }
     
-
-
+    func logOut() {
+        AuthManager.shared.logOut { (success) in
+            DispatchQueue.main.async {
+                if success {
+                    let vc = LoginVC()
+                    let nav = UINavigationController(rootViewController: vc)
+                    nav.modalPresentationStyle = .fullScreen
+                    self.present(nav, animated: false, completion: nil)
+                }
+            }
+        }
+    }
+    
 }
 

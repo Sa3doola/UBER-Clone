@@ -6,10 +6,12 @@
 //
 
 import UIKit
+import Firebase
 
 class SignUpVC: UIViewController {
     
     // MARK: - Properties
+    
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.text = "UBER"
@@ -85,19 +87,41 @@ class SignUpVC: UIViewController {
     }()
     
     // MARK: - LifeCycle
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         configureUI()
     }
+    
     // MARK: - Selectors
     
     @objc func handleSignUp() {
+        guard let email = emailTextField.text,
+              let password = passwordTextField.text,
+              let fullName = fullnameTextField.text
+              else { return }
+        let accountTypeIndex = accountTypeSegmentedControl.selectedSegmentIndex
         
+        AuthManager.shared.createUser(email: email, password: password, fullname: fullName, accountTypeIndex: accountTypeIndex) { [weak self] (success) in
+            guard let strongSelf = self else { return }
+            var message: String = ""
+            
+            if (success) {
+                message = "User was successfully created"
+            } else {
+                message = "There was an error"
+            }
+            
+            let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
+            strongSelf.present(alert, animated: true, completion: nil)
+        }
     }
     
     @objc func handleShowLogin() {
-        
+        navigationController?.popViewController(animated: true)
     }
+    
     // MARK: - Helper Functions
     
     func configureUI() {
@@ -123,8 +147,5 @@ class SignUpVC: UIViewController {
         alreadyHaveAccountButton.centerX(inView: view)
         alreadyHaveAccountButton.anchor(bottom: view.safeAreaLayoutGuide.bottomAnchor, height: 32)
     }
-
     
-    
-
 }

@@ -6,10 +6,12 @@
 //
 
 import UIKit
+import Firebase
 
 class LoginVC: UIViewController {
     
     // MARK: - Properties
+    
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.text = "UBER"
@@ -62,10 +64,12 @@ class LoginVC: UIViewController {
     }()
     
     // MARK: - LifeCycle
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         configureUI()
     }
+    
     // MARK: - Selectors
     
     @objc func handleLogin() {
@@ -73,11 +77,14 @@ class LoginVC: UIViewController {
     }
     
     @objc func handleShowSignUp() {
-        
+        let vc = SignUpVC()
+        navigationController?.pushViewController(vc, animated: true)
     }
+    
     // MARK: - Helper Functions
     
     func configureUI() {
+        configureNavigationbar()
         view.backgroundColor = .backgroundColor
         
         view.addSubview(titleLabel)
@@ -99,7 +106,9 @@ class LoginVC: UIViewController {
         dontHaveAccountButton.centerX(inView: view)
         dontHaveAccountButton.anchor(bottom: view.safeAreaLayoutGuide.bottomAnchor, height: 32)
     }
-
     
-
+    func configureNavigationbar() {
+        navigationController?.navigationBar.isHidden = true
+        navigationController?.navigationBar.barStyle = .black
+    }
 }
