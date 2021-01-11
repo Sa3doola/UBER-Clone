@@ -21,6 +21,7 @@ class LocationCell: UITableViewCell {
     
     var titleLabel: UILabel = {
         let label = UILabel()
+        label.text = "123 main street"
         label.font = UIFont.systemFont(ofSize: 14)
         return label
     }()
@@ -29,6 +30,7 @@ class LocationCell: UITableViewCell {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 14)
         label.textColor = .secondaryLabel
+        label.text = "123 main street, Cairo, EGY"
         return label
     }()
     
@@ -43,7 +45,11 @@ class LocationCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    // MARK: - Helper Functions
+    
     func configureUI() {
+        
+        selectionStyle = .none
         
         let stack = UIStackView(arrangedSubviews: [titleLabel, addressLabel])
         stack.distribution = .fillEqually

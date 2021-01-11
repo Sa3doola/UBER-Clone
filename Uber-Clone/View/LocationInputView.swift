@@ -27,7 +27,7 @@ class LocationInputView: UIView {
     
     let titleLabel: UILabel = {
         let label = UILabel()
-        label.text = "Test"
+        label.text = "Saad Sherif"
         label.textColor = .secondaryLabel
         label.font = UIFont.systemFont(ofSize: 16)
         return label
@@ -54,8 +54,10 @@ class LocationInputView: UIView {
     lazy var startingLocationTextField: UITextField = {
         let tf = UITextField()
         tf.placeholder = "Current Location "
+        tf.backgroundColor = .systemBackground
         tf.isEnabled = false
         tf.font = UIFont.systemFont(ofSize: 14)
+        tf.textColor = .secondaryLabel
         
         let paddingView = UIView()
         paddingView.setDimensions(height: 30, width: 8)
@@ -68,9 +70,10 @@ class LocationInputView: UIView {
     lazy var destinationTextField: UITextField = {
         let tf = UITextField()
         tf.placeholder = "Enter a desination.."
-        tf.backgroundColor = UIColor.rgb(red: 215, green: 215, blue: 215)
+        tf.backgroundColor = .secondarySystemFill
         tf.returnKeyType = .search
         tf.font = UIFont.systemFont(ofSize: 14)
+        tf.textColor = .secondaryLabel
         
         let paddingView = UIView()
         paddingView.setDimensions(height: 30, width: 8)
@@ -99,7 +102,7 @@ class LocationInputView: UIView {
     // MARK: - Helper Functions
     
     func configureViewComponents() {
-        backgroundColor = .label
+        backgroundColor = .secondarySystemBackground
         addShadow()
         
         addSubview(backButton)

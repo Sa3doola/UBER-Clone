@@ -34,10 +34,15 @@ public class AuthManager {
         }
     }
     
-    public func logIn(email: String, password: String,
-                      completion: @escaping (_ success: Bool) -> Void) {
+    public func logIn(email: String, password: String, completion: @escaping (_ success: Bool) -> Void) {
         Auth.auth().signIn(withEmail: email, password: password) { (result, error) in
-            
+            if let error = error {
+                print("Failed to log in with error \(error.localizedDescription)")
+                completion(false)
+                return
+            }
+            print("Successfully logged in ....")
+            completion(true)
         }
     }
     

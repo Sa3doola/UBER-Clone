@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import MapKit
 
 // MARK: - UIView
 extension UIView {

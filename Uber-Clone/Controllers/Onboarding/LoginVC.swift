@@ -73,7 +73,19 @@ class LoginVC: UIViewController {
     // MARK: - Selectors
     
     @objc func handleLogin() {
+        guard let email = emailTextField.text,
+              let password = passwordTextField.text, password.count >= 8 else { return }
         
+        AuthManager.shared.logIn(email: email, password: password) { [weak self] (success) in
+            guard let strongSelf = self else { return }
+            DispatchQueue.main.async {
+                if success {
+                    let vc = HomeVC()
+                    vc.modalPresentationStyle = .fullScreen
+                    strongSelf.present(vc, animated: true, completion: nil)
+                }
+            }
+        }
     }
     
     @objc func handleShowSignUp() {

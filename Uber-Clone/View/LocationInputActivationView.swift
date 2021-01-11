@@ -52,7 +52,7 @@ class LocationInputActivationView: UIView {
     // MARK: - Helper Functions
     
     func configureUI() {
-        backgroundColor = .label
+        backgroundColor = .systemBackground
         DispatchQueue.main.async {
             self.addShadow()
         }

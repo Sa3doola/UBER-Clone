@@ -108,6 +108,7 @@ class SignUpVC: UIViewController {
             
             if (success) {
                 message = "User was successfully created"
+                strongSelf.navigationController?.popViewController(animated: true)
             } else {
                 message = "There was an error"
             }
