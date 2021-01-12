@@ -16,42 +16,46 @@ class LocationInputView: UIView {
     
     // MARK: - Properties
     
+    var user: User? {
+        didSet { titleLabel.text = user?.fullName}
+    }
+    
+    
     var delegate: LocationInputViewDelegate?
     
-    let backButton: UIButton = {
+    private let backButton: UIButton = {
         let button = UIButton(type: .system)
         button.setImage(#imageLiteral(resourceName: "baseline_arrow_back_black_36dp-1").withRenderingMode(.alwaysOriginal), for: .normal)
         button.addTarget(self, action: #selector(handleBackTapped), for: .touchUpInside)
         return button
     }()
     
-    let titleLabel: UILabel = {
+    private let titleLabel: UILabel = {
         let label = UILabel()
-        label.text = "Saad Sherif"
         label.textColor = .secondaryLabel
-        label.font = UIFont.systemFont(ofSize: 16)
+        label.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         return label
     }()
     
-    let startLocationIndicatorView: UIView = {
+    private let startLocationIndicatorView: UIView = {
         let view = UIView()
         view.backgroundColor = .label
         return view
     }()
     
-    let linkingView: UIView = {
+    private let linkingView: UIView = {
         let view = UIView()
         view.backgroundColor = .secondaryLabel
         return view
     }()
     
-    let destinationIndicatorView: UIView = {
+    private let destinationIndicatorView: UIView = {
         let view = UIView()
         view.backgroundColor = .label
         return view
     }()
     
-    lazy var startingLocationTextField: UITextField = {
+    private lazy var startingLocationTextField: UITextField = {
         let tf = UITextField()
         tf.placeholder = "Current Location "
         tf.backgroundColor = .systemBackground
@@ -67,7 +71,7 @@ class LocationInputView: UIView {
         return tf
     }()
     
-    lazy var destinationTextField: UITextField = {
+    private lazy var destinationTextField: UITextField = {
         let tf = UITextField()
         tf.placeholder = "Enter a desination.."
         tf.backgroundColor = .secondarySystemFill

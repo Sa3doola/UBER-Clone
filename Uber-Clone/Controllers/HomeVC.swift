@@ -22,6 +22,10 @@ class HomeVC: UIViewController {
     private let locationInputView = LocationInputView()
     private let tableView = UITableView()
     
+    private var user: User? {
+        didSet { locationInputView.user = user }
+    }
+    
     private final let locationInputViewHeight: CGFloat = 200
     
     // MARK: - LifeCycel
@@ -29,6 +33,7 @@ class HomeVC: UIViewController {
         super.viewDidLoad()
         enableLocationServices()
         configureUI()
+        fetchUserData()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -78,8 +83,7 @@ class HomeVC: UIViewController {
         } completion: { (_) in
             UIView.animate(withDuration: 0.4) {
                 self.tableView.frame.origin.y = self.locationInputViewHeight
-            }
-        }
+            } }
     }
     
     func configureTableView() {
@@ -97,6 +101,12 @@ class HomeVC: UIViewController {
         view.addSubview(tableView)
     }
     
+    func fetchUserData() {
+        DatabaseManager.shared.fetchUserData { (user) in
+            self.user = user
+        }
+    }
+    
     func checkIfAuthenticated() {
         if Auth.auth().currentUser?.uid == nil {
             DispatchQueue.main.async {
@@ -104,9 +114,7 @@ class HomeVC: UIViewController {
                 let nav = UINavigationController(rootViewController: vc)
                 nav.modalPresentationStyle = .fullScreen
                 self.present(nav, animated: false, completion: nil)
-            }
-        } 
-    }
+            } } }
     
     func logOut() {
         AuthManager.shared.logOut { (success) in
@@ -119,10 +127,7 @@ class HomeVC: UIViewController {
                 } else {
                     print("Failed to log out....")
                     return
-                }
-            }
-        }
-    }
+                } } } }
 }
 
 // MARK: - Location Services
