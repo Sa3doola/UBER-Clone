@@ -6,12 +6,14 @@
 //
 
 import UIKit
-import FirebaseAuth
+import Firebase
+import GeoFire
 
 public class AuthManager {
     
     static let shared = AuthManager()
     
+    var location = LocationHandler.shared.locationManager.location
     let database = DatabaseManager()
     
     public func createUser(email: String, password: String, fullname: String, accountTypeIndex: Int, completion: @escaping (_ success: Bool) -> Void) {
@@ -28,6 +30,21 @@ public class AuthManager {
             let values = ["email": email,
                           "FullName": fullname,
                           "accountType": accountTypeIndex] as [String: Any]
+            
+            if accountTypeIndex == 1 {
+                let geofire = GeoFire(firebaseRef: REF_DRIVER_LOCATIONS)
+                guard let location = stongSelf.location else { return }
+                
+                geofire.setLocation(location, forKey: uid) { (error) in
+                    if error != nil {
+                        print("Set Location Error with \(String(describing: error?.localizedDescription))")
+                        return
+                    }
+                    stongSelf.database.insertNewUser(values: values, uid: uid)
+                    completion(true)
+                    return
+                }
+            }
             
             stongSelf.database.insertNewUser(values: values, uid: uid)
             completion(true)

@@ -5,20 +5,20 @@
 //  Created by Saad Sherif on 1/9/21.
 //
 
-import UIKit
+import CoreLocation
 import Firebase
+import GeoFire
 
 let DB_REF = Database.database().reference()
 let REF_USERS = DB_REF.child("Users")
+let REF_DRIVER_LOCATIONS = DB_REF.child("diver-locations")
 
 public class DatabaseManager {
     
     static let shared = DatabaseManager()
     
-    let currentUid = Auth.auth().currentUser?.uid
-    
     public func insertNewUser(values: [String: Any], uid: String) {
-        DB_REF.child("Users").child(uid).setValue(values) { (error, ref) in
+        REF_USERS.child(uid).setValue(values) { (error, ref) in
             if let error = error {
                 print("Failed to save data to realTime database with error \(error.localizedDescription)")
                 return
@@ -27,15 +27,28 @@ public class DatabaseManager {
         }
     }
     
-     func fetchUserData(completion: @escaping(User) -> Void) {
+    func fetchUserData(uid: String, completion: @escaping(User) -> Void) {
         
-        guard let currentUId = Auth.auth().currentUser?.uid else { return }
-        
-        REF_USERS.child(currentUId).observeSingleEvent(of: .value) { (snapshot) in
+        REF_USERS.child(uid).observeSingleEvent(of: .value) { (snapshot) in
             guard let dictionary = snapshot.value as? [String: Any] else { return }
-            let user = User(dicationary: dictionary)
+            let uId = snapshot.key
+            let user = User(uid: uId, dicationary: dictionary)
             
             completion(user)
+        }
+    }
+    
+    func fetchDriver(location: CLLocation, completion: @escaping (User) -> Void) {
+        let geofire = GeoFire(firebaseRef: REF_DRIVER_LOCATIONS)
+        
+        REF_DRIVER_LOCATIONS.observe(.value) { (snapshot) in
+            geofire.query(at: location, withRadius: 50).observe(.keyEntered, with: { (uid, location) in
+                self.fetchUserData(uid: uid) { (user) in
+                    var driver = user
+                    driver.location = location
+                    completion(driver)
+                }
+            })
         }
     }
 }

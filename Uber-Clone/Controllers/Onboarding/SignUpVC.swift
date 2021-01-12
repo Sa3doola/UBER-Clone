@@ -107,15 +107,13 @@ class SignUpVC: UIViewController {
             var message: String = ""
             
             if (success) {
-                message = "User was successfully created"
-                strongSelf.navigationController?.popViewController(animated: true)
+                strongSelf.dismiss(animated: true, completion: nil)
             } else {
                 message = "There was an error"
+                let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
+                strongSelf.present(alert, animated: true, completion: nil)
             }
-            
-            let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
-            strongSelf.present(alert, animated: true, completion: nil)
         }
     }
     

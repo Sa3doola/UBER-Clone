@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		9268B18A56045DE36E229801 /* Pods_Uber_Clone.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1D19957622C3E08AF60460E /* Pods_Uber_Clone.framework */; };
 		D933195525ADB94100C36306 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = D933195425ADB94100C36306 /* User.swift */; };
+		D933195825ADD22800C36306 /* LocationHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = D933195725ADD22800C36306 /* LocationHandler.swift */; };
+		D933196725ADF9E800C36306 /* DriverAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = D933196625ADF9E800C36306 /* DriverAnnotation.swift */; };
 		D93CB68E25A9CEF00000166F /* DatabaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D93CB68D25A9CEF00000166F /* DatabaseManager.swift */; };
 		D95A8E8425A7227800E56B2D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D95A8E8325A7227800E56B2D /* AppDelegate.swift */; };
 		D95A8E8625A7227800E56B2D /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D95A8E8525A7227800E56B2D /* SceneDelegate.swift */; };
@@ -32,6 +34,8 @@
 		75339783C411EA438F8D7605 /* Pods-Uber-Clone.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Uber-Clone.release.xcconfig"; path = "Target Support Files/Pods-Uber-Clone/Pods-Uber-Clone.release.xcconfig"; sourceTree = "<group>"; };
 		C1D19957622C3E08AF60460E /* Pods_Uber_Clone.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Uber_Clone.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D933195425ADB94100C36306 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		D933195725ADD22800C36306 /* LocationHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationHandler.swift; sourceTree = "<group>"; };
+		D933196625ADF9E800C36306 /* DriverAnnotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DriverAnnotation.swift; sourceTree = "<group>"; };
 		D93CB68D25A9CEF00000166F /* DatabaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseManager.swift; sourceTree = "<group>"; };
 		D95A8E8025A7227800E56B2D /* Uber-Clone.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Uber-Clone.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D95A8E8325A7227800E56B2D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -130,6 +134,7 @@
 			isa = PBXGroup;
 			children = (
 				D933195425ADB94100C36306 /* User.swift */,
+				D933196625ADF9E800C36306 /* DriverAnnotation.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -147,6 +152,7 @@
 			isa = PBXGroup;
 			children = (
 				D95A8EB125A7251300E56B2D /* Extentions.swift */,
+				D933195725ADD22800C36306 /* LocationHandler.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -315,7 +321,9 @@
 				D95A8EB225A7251300E56B2D /* Extentions.swift in Sources */,
 				D95A8EBB25A731E900E56B2D /* AuthButton.swift in Sources */,
 				D95A8E8825A7227800E56B2D /* HomeVC.swift in Sources */,
+				D933196725ADF9E800C36306 /* DriverAnnotation.swift in Sources */,
 				D9987A8A25A8ECA20036D3A0 /* LocationInputView.swift in Sources */,
+				D933195825ADD22800C36306 /* LocationHandler.swift in Sources */,
 				D95A8E8425A7227800E56B2D /* AppDelegate.swift in Sources */,
 				D95A8E8625A7227800E56B2D /* SceneDelegate.swift in Sources */,
 				D9987A8D25A8F39F0036D3A0 /* LocationCell.swift in Sources */,

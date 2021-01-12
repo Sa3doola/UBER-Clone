@@ -60,6 +60,7 @@ class LocationInputActivationView: UIView {
         addSubview(indicatorView)
         indicatorView.centerY(inView: self, leftAnchor: leftAnchor, paddingLeft: 16)
         indicatorView.setDimensions(height: 6, width: 6)
+        indicatorView.layer.cornerRadius = 2
         
         addSubview(placeholderLabel)
         placeholderLabel.centerY(inView: self, leftAnchor: indicatorView.rightAnchor, paddingLeft: 20)

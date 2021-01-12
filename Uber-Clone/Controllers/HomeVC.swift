@@ -10,13 +10,14 @@ import Firebase
 import MapKit
 
 private let reuseIdentifier = "LocationCell"
+private let annotationIdentifire = "DriverAnnotation"
 
 class HomeVC: UIViewController {
     
     // MARK: - Properties
     
     private let mapView = MKMapView()
-    private let locationManager = CLLocationManager()
+    private let locationManager = LocationHandler.shared.locationManager
     
     private let inputActivationView = LocationInputActivationView()
     private let locationInputView = LocationInputView()
@@ -34,6 +35,7 @@ class HomeVC: UIViewController {
         enableLocationServices()
         configureUI()
         fetchUserData()
+        fetchDriverData()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -68,6 +70,7 @@ class HomeVC: UIViewController {
         
         mapView.showsUserLocation = true
         mapView.userTrackingMode = .follow
+        mapView.delegate = self
     }
     
     func configureLocationInputView() {
@@ -102,8 +105,34 @@ class HomeVC: UIViewController {
     }
     
     func fetchUserData() {
-        DatabaseManager.shared.fetchUserData { (user) in
+        guard let currentUid = Auth.auth().currentUser?.uid else { return }
+        DatabaseManager.shared.fetchUserData(uid: currentUid) { (user) in
             self.user = user
+        }
+    }
+    
+    func fetchDriverData() {
+        guard let location = locationManager?.location else { return }
+        DatabaseManager.shared.fetchDriver(location: location) { (driver) in
+            guard let coordinate = driver.location?.coordinate else { return }
+            let annotation = DriverAnnotation(uid: driver.uid, coordinate: coordinate)
+            
+            var driverIsVisible: Bool {
+                return self.mapView.annotations.contains { (annotation) -> Bool in
+                    guard let driverAnno = annotation as? DriverAnnotation else {
+                        return false }
+                    if driverAnno.uid == driver.uid {
+                        // update position here
+                        driverAnno.updateAnnotationPosition(with: coordinate)
+                        return true
+                    }
+                    return false
+                }
+            }
+            
+            if !driverIsVisible {
+                self.mapView.addAnnotation(annotation)
+            }
         }
     }
     
@@ -130,32 +159,40 @@ class HomeVC: UIViewController {
                 } } } }
 }
 
+// MARK: - MKMapViewDelegate
+
+extension HomeVC: MKMapViewDelegate {
+    
+    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+        if let annotation = annotation as? DriverAnnotation {
+            let view = MKAnnotationView(annotation: annotation, reuseIdentifier: annotationIdentifire)
+            view.image = #imageLiteral(resourceName: "chevron-sign-to-right")
+            return view
+        }
+        return nil
+    }
+    
+}
+
 // MARK: - Location Services
 
-extension HomeVC: CLLocationManagerDelegate {
+extension HomeVC {
     func enableLocationServices() {
-        locationManager.delegate = self
         switch CLLocationManager.authorizationStatus() {
         case .notDetermined:
             print("Not determind")
-            locationManager.requestWhenInUseAuthorization()
+            locationManager?.requestWhenInUseAuthorization()
         case .restricted, .denied:
             break
         case .authorizedAlways:
             print("Auth always ")
-            locationManager.startUpdatingLocation()
-            locationManager.desiredAccuracy = kCLLocationAccuracyBest
+            locationManager?.startUpdatingLocation()
+            locationManager?.desiredAccuracy = kCLLocationAccuracyBest
         case .authorizedWhenInUse:
             print("Auth When in Use")
-            locationManager.requestAlwaysAuthorization()
+            locationManager?.requestAlwaysAuthorization()
         @unknown default:
             break
-        }
-    }
-    
-    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
-        if status == .authorizedWhenInUse {
-            locationManager.requestAlwaysAuthorization()
         }
     }
 }
