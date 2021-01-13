@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import MapKit
 
 // MARK: - UIView
 extension UIView {
@@ -143,4 +144,19 @@ extension UIColor {
     static let outlineStrokeColor = UIColor.rgb(red: 234, green: 46, blue: 111)
     static let trackStrokeColor = UIColor.rgb(red: 56, green: 25, blue: 49)
     static let pulsatingFillColor = UIColor.rgb(red: 86, green: 30, blue: 63)
+}
+
+// MARK: - MKPlaceMark
+
+extension MKPlacemark {
+    var address: String? {
+        get {
+            guard let subThroughfare = subThoroughfare else { return nil }
+            guard let throughfare = thoroughfare else { return nil }
+            guard let locality = locality else { return nil}
+            guard let adminArea = administrativeArea else { return nil }
+            
+            return "\(subThroughfare) \(throughfare) \(locality) \(adminArea)"
+        }
+    }
 }

@@ -12,16 +12,15 @@ class LocationCell: UITableViewCell {
 
     // MARK: - Properties
     
-//    var placeMark: MKPlacemark? {
-//        didSet {
-//            titleLabel.text = placeMark?.name
-//            addressLabel.text = placeMark.a
-//        }
-//    }
+    var placeMark: MKPlacemark? {
+        didSet {
+            titleLabel.text = placeMark?.name
+            addressLabel.text = placeMark?.address
+        }
+    }
     
     var titleLabel: UILabel = {
         let label = UILabel()
-        label.text = "123 main street"
         label.font = UIFont.systemFont(ofSize: 14)
         return label
     }()
@@ -30,7 +29,6 @@ class LocationCell: UITableViewCell {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 14)
         label.textColor = .secondaryLabel
-        label.text = "123 main street, Cairo, EGY"
         return label
     }()
     

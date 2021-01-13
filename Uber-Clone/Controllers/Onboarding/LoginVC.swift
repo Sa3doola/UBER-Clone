@@ -82,6 +82,7 @@ class LoginVC: UIViewController {
                 if success {
                     let vc = HomeVC()
                     vc.modalPresentationStyle = .fullScreen
+                    vc.configure()
                     strongSelf.present(vc, animated: true, completion: nil)
                 }
             }

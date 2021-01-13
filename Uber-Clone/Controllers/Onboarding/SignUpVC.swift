@@ -107,6 +107,7 @@ class SignUpVC: UIViewController {
             var message: String = ""
             
             if (success) {
+                
                 strongSelf.dismiss(animated: true, completion: nil)
             } else {
                 message = "There was an error"
