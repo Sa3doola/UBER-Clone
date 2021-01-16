@@ -30,9 +30,11 @@ class HomeVC: UIViewController {
     
     private let inputActivationView = LocationInputActivationView()
     private let locationInputView = LocationInputView()
+    private let rideActionView = RideActionView()
     private let tableView = UITableView()
     private var searchResult = [MKPlacemark]()
     private final let locationInputViewHeight: CGFloat = 200
+    private final let rideActionViewHeight: CGFloat = 300
     private var actionBtnConfig = actionButtonConfiguration()
     private var route: MKRoute?
 
@@ -70,6 +72,7 @@ class HomeVC: UIViewController {
             UIView.animate(withDuration: 0.3) {
                 self.inputActivationView.alpha = 1
                 self.configureActionButton(config: .showMenu)
+                self.animateRideActionView(shouldShow: false)
             }
         }
     }
@@ -84,6 +87,7 @@ class HomeVC: UIViewController {
     
     func configureUI() {
         configureMapView()
+        configureRideActionView()
         
         view.addSubview(actionbutton)
         actionbutton.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor,
@@ -127,6 +131,12 @@ class HomeVC: UIViewController {
             } }
     }
     
+    func configureRideActionView() {
+        view.addSubview(rideActionView)
+        rideActionView.frame = CGRect(x: 0, y: view.frame.height,
+                                      width: view.frame.width, height: rideActionViewHeight)
+    }
+    
     func configureTableView() {
         tableView.delegate = self
         tableView.dataSource = self
@@ -159,6 +169,18 @@ class HomeVC: UIViewController {
             self.tableView.frame.origin.y = self.view.frame.height
             self.locationInputView.removeFromSuperview()
         }, completion: completion)
+    }
+    
+    func animateRideActionView(shouldShow: Bool, destenation: MKPlacemark? = nil) {
+        let yOrigin = shouldShow ? self.view.frame.height - self.rideActionViewHeight : self.view.frame.height
+        
+        if shouldShow {
+            rideActionView.destenation = destenation
+        }
+        
+        UIView.animate(withDuration: 0.3) {
+            self.rideActionView.frame.origin.y = yOrigin
+        }
     }
     
     // MARK: - API
@@ -368,7 +390,7 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return section == 0 ? 2 : searchResult.count
     }
-    
+
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath) as! LocationCell
         
@@ -378,24 +400,26 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource {
         
         return cell
     }
-    
+
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let selectedPlacemark = searchResult[indexPath.row]
+        let destenationPlacemark = searchResult[indexPath.row]
         
         configureActionButton(config: .dismissActionView)
         
-        let destenation = MKMapItem(placemark: selectedPlacemark)
+        let destenation = MKMapItem(placemark: destenationPlacemark)
         generatePolyline(toDestenation: destenation)
         
         dismissLocationView { (_) in
             let annotation = MKPointAnnotation()
-            annotation.coordinate = selectedPlacemark.coordinate
+            annotation.coordinate = destenationPlacemark.coordinate
             self.mapView.addAnnotation(annotation)
             self.mapView.selectAnnotation(annotation, animated: true)
             
             let annotations = self.mapView.annotations.filter({ !$0.isKind(of:DriverAnnotation.self) })
             
-            self.mapView.showAnnotations(annotations, animated: true)
+            self.mapView.zoomToFit(annotations: annotations)
+            
+            self.animateRideActionView(shouldShow: true, destenation: destenationPlacemark)
         }
     }
     
