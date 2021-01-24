@@ -12,6 +12,7 @@ import GeoFire
 let DB_REF = Database.database().reference()
 let REF_USERS = DB_REF.child("Users")
 let REF_DRIVER_LOCATIONS = DB_REF.child("diver-locations")
+let REF_TRIPS = DB_REF.child("Trips")
 
 public class DatabaseManager {
     

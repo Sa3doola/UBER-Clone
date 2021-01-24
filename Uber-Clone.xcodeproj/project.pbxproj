@@ -23,11 +23,13 @@
 		D95A8EB525A7304100E56B2D /* LoginVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = D95A8EB425A7304100E56B2D /* LoginVC.swift */; };
 		D95A8EB825A7305100E56B2D /* SignUpVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = D95A8EB725A7305100E56B2D /* SignUpVC.swift */; };
 		D95A8EBB25A731E900E56B2D /* AuthButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = D95A8EBA25A731E900E56B2D /* AuthButton.swift */; };
+		D978D97A25BE159200F2876C /* Trip.swift in Sources */ = {isa = PBXBuildFile; fileRef = D978D97925BE159200F2876C /* Trip.swift */; };
 		D9987A8725A8EA080036D3A0 /* LocationInputActivationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9987A8625A8EA080036D3A0 /* LocationInputActivationView.swift */; };
 		D9987A8A25A8ECA20036D3A0 /* LocationInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9987A8925A8ECA20036D3A0 /* LocationInputView.swift */; };
 		D9987A8D25A8F39F0036D3A0 /* LocationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9987A8C25A8F39F0036D3A0 /* LocationCell.swift */; };
 		D9987A9125A90A4F0036D3A0 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = D9987A9025A90A4F0036D3A0 /* GoogleService-Info.plist */; };
 		D9987AB225A910470036D3A0 /* AuthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9987AB125A910470036D3A0 /* AuthManager.swift */; };
+		D9CE12E525BDF7A700FBF9A2 /* Service.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9CE12E425BDF7A700FBF9A2 /* Service.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -51,11 +53,13 @@
 		D95A8EB425A7304100E56B2D /* LoginVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginVC.swift; sourceTree = "<group>"; };
 		D95A8EB725A7305100E56B2D /* SignUpVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpVC.swift; sourceTree = "<group>"; };
 		D95A8EBA25A731E900E56B2D /* AuthButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthButton.swift; sourceTree = "<group>"; };
+		D978D97925BE159200F2876C /* Trip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Trip.swift; sourceTree = "<group>"; };
 		D9987A8625A8EA080036D3A0 /* LocationInputActivationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationInputActivationView.swift; sourceTree = "<group>"; };
 		D9987A8925A8ECA20036D3A0 /* LocationInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationInputView.swift; sourceTree = "<group>"; };
 		D9987A8C25A8F39F0036D3A0 /* LocationCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationCell.swift; sourceTree = "<group>"; };
 		D9987A9025A90A4F0036D3A0 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "GoogleService-Info.plist"; sourceTree = SOURCE_ROOT; };
 		D9987AB125A910470036D3A0 /* AuthManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthManager.swift; sourceTree = "<group>"; };
+		D9CE12E425BDF7A700FBF9A2 /* Service.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Service.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -138,6 +142,7 @@
 			children = (
 				D933195425ADB94100C36306 /* User.swift */,
 				D933196625ADF9E800C36306 /* DriverAnnotation.swift */,
+				D978D97925BE159200F2876C /* Trip.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -147,6 +152,7 @@
 			children = (
 				D9987AB125A910470036D3A0 /* AuthManager.swift */,
 				D93CB68D25A9CEF00000166F /* DatabaseManager.swift */,
+				D9CE12E425BDF7A700FBF9A2 /* Service.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -320,6 +326,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D9CE12E525BDF7A700FBF9A2 /* Service.swift in Sources */,
 				D933195525ADB94100C36306 /* User.swift in Sources */,
 				D95A8EB225A7251300E56B2D /* Extentions.swift in Sources */,
 				D95A8EBB25A731E900E56B2D /* AuthButton.swift in Sources */,
@@ -331,6 +338,7 @@
 				D95A8E8625A7227800E56B2D /* SceneDelegate.swift in Sources */,
 				D9987A8D25A8F39F0036D3A0 /* LocationCell.swift in Sources */,
 				D95A8EB825A7305100E56B2D /* SignUpVC.swift in Sources */,
+				D978D97A25BE159200F2876C /* Trip.swift in Sources */,
 				D93CB68E25A9CEF00000166F /* DatabaseManager.swift in Sources */,
 				D91D446825B0541800B5DBE7 /* RideActionView.swift in Sources */,
 				D9987AB225A910470036D3A0 /* AuthManager.swift in Sources */,

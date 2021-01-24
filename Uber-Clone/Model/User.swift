@@ -7,11 +7,16 @@
 
 import CoreLocation
 
+enum AccountType: Int {
+    case passenger
+    case driver
+}
+
 struct User {
     
     let fullName: String
     let email: String
-    let accountType: Int
+    var accountType: AccountType!
     let uid: String
     var location: CLLocation?
     
@@ -19,7 +24,10 @@ struct User {
         self.uid = uid
         self.fullName = dicationary["FullName"] as? String ?? ""
         self.email = dicationary["email"] as? String ?? ""
-        self.accountType = dicationary["accountType"] as? Int ?? 0
+        
+        if let index = dicationary["accountType"] as? Int {
+            self.accountType = AccountType(rawValue: index)
+        }
     }
     
 }

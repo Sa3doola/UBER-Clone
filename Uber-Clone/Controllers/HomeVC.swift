@@ -39,7 +39,13 @@ class HomeVC: UIViewController {
     private var route: MKRoute?
 
     private var user: User? {
-        didSet { locationInputView.user = user }
+        didSet {
+            locationInputView.user = user
+            if user?.accountType == .passenger {
+                fetchDriverData()
+                configureLocationInputActivationView()
+            }
+        }
     }
     
     private let actionbutton: UIButton = {
@@ -82,7 +88,7 @@ class HomeVC: UIViewController {
     func configure() {
         configureUI()
         fetchUserData()
-        fetchDriverData()
+        
     }
     
     func configureUI() {
@@ -92,6 +98,11 @@ class HomeVC: UIViewController {
         view.addSubview(actionbutton)
         actionbutton.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor,
                             paddingTop: 18, paddingLeft: 20, width: 40, height: 40)
+        
+        configureTableView()
+    }
+    
+    func configureLocationInputActivationView() {
         
         view.addSubview(inputActivationView)
         inputActivationView.centerX(inView: view)
@@ -103,7 +114,6 @@ class HomeVC: UIViewController {
         UIView.animate(withDuration: 2) {
             self.inputActivationView.alpha = 1
         }
-        configureTableView()
     }
     
     func configureMapView() {
@@ -133,6 +143,7 @@ class HomeVC: UIViewController {
     
     func configureRideActionView() {
         view.addSubview(rideActionView)
+        rideActionView.delegate = self
         rideActionView.frame = CGRect(x: 0, y: view.frame.height,
                                       width: view.frame.width, height: rideActionViewHeight)
     }
@@ -422,5 +433,26 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource {
             self.animateRideActionView(shouldShow: true, destenation: destenationPlacemark)
         }
     }
+}
+
+// MARK: - RideActionViewDelegate
+
+extension HomeVC: RideActionViewDelegate {
+    
+    func uploadTrip(_ view: RideActionView) {
+        
+        guard let pickupCoordinates = locationManager?.location?.coordinate else { return }
+        guard let destinationCoordinates = view.destenation?.coordinate else { return }
+        
+        Service.shared.uploadTrip(pickupCoordinates, destinationCoordinates) { (error, ref) in
+            if let error = error {
+                print("DEBUG: Failed to upload trip with error: \(error.localizedDescription)")
+                return
+            }
+            
+            print("DEBUG: Did upload trip successfully...")
+        }
+    }
+    
     
 }
