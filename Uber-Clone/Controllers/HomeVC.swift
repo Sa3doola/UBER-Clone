@@ -41,10 +41,22 @@ class HomeVC: UIViewController {
     private var user: User? {
         didSet {
             locationInputView.user = user
+            
             if user?.accountType == .passenger {
                 fetchDriverData()
                 configureLocationInputActivationView()
+            } else {
+                observeTrips()
             }
+        }
+    }
+    
+    private var trip: Trip? {
+        didSet {
+            guard let trip = trip else { return }
+            let vc = PickupVC(trip: trip)
+            vc.delegate = self
+            self.present(vc, animated: true, completion: nil)
         }
     }
     
@@ -88,7 +100,6 @@ class HomeVC: UIViewController {
     func configure() {
         configureUI()
         fetchUserData()
-        
     }
     
     func configureUI() {
@@ -225,6 +236,12 @@ class HomeVC: UIViewController {
             if !driverIsVisible {
                 self.mapView.addAnnotation(annotation)
             }
+        }
+    }
+    
+    func observeTrips() {
+        Service.shared.observeTrips { (trip) in
+            self.trip = trip
         }
     }
     
@@ -453,6 +470,15 @@ extension HomeVC: RideActionViewDelegate {
             print("DEBUG: Did upload trip successfully...")
         }
     }
+}
+
+// MARK: - PickupVCDelegate
+
+extension HomeVC: PickupVCDelegate {
     
+    func didAcceptTrip(_ trip: Trip) {
+        self.trip?.state = .accepted
+        self.dismiss(animated: true, completion: nil)
+    }
     
 }

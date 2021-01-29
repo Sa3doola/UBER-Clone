@@ -24,6 +24,7 @@
 		D95A8EB825A7305100E56B2D /* SignUpVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = D95A8EB725A7305100E56B2D /* SignUpVC.swift */; };
 		D95A8EBB25A731E900E56B2D /* AuthButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = D95A8EBA25A731E900E56B2D /* AuthButton.swift */; };
 		D978D97A25BE159200F2876C /* Trip.swift in Sources */ = {isa = PBXBuildFile; fileRef = D978D97925BE159200F2876C /* Trip.swift */; };
+		D984E8B125C439AA000B7A62 /* PickupVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = D984E8B025C439AA000B7A62 /* PickupVC.swift */; };
 		D9987A8725A8EA080036D3A0 /* LocationInputActivationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9987A8625A8EA080036D3A0 /* LocationInputActivationView.swift */; };
 		D9987A8A25A8ECA20036D3A0 /* LocationInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9987A8925A8ECA20036D3A0 /* LocationInputView.swift */; };
 		D9987A8D25A8F39F0036D3A0 /* LocationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9987A8C25A8F39F0036D3A0 /* LocationCell.swift */; };
@@ -54,6 +55,7 @@
 		D95A8EB725A7305100E56B2D /* SignUpVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpVC.swift; sourceTree = "<group>"; };
 		D95A8EBA25A731E900E56B2D /* AuthButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthButton.swift; sourceTree = "<group>"; };
 		D978D97925BE159200F2876C /* Trip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Trip.swift; sourceTree = "<group>"; };
+		D984E8B025C439AA000B7A62 /* PickupVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PickupVC.swift; sourceTree = "<group>"; };
 		D9987A8625A8EA080036D3A0 /* LocationInputActivationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationInputActivationView.swift; sourceTree = "<group>"; };
 		D9987A8925A8ECA20036D3A0 /* LocationInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationInputView.swift; sourceTree = "<group>"; };
 		D9987A8C25A8F39F0036D3A0 /* LocationCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationCell.swift; sourceTree = "<group>"; };
@@ -119,6 +121,7 @@
 			isa = PBXGroup;
 			children = (
 				D95A8E8725A7227800E56B2D /* HomeVC.swift */,
+				D984E8B025C439AA000B7A62 /* PickupVC.swift */,
 				D95A8EA025A7232D00E56B2D /* Onboarding */,
 			);
 			path = Controllers;
@@ -337,6 +340,7 @@
 				D95A8E8425A7227800E56B2D /* AppDelegate.swift in Sources */,
 				D95A8E8625A7227800E56B2D /* SceneDelegate.swift in Sources */,
 				D9987A8D25A8F39F0036D3A0 /* LocationCell.swift in Sources */,
+				D984E8B125C439AA000B7A62 /* PickupVC.swift in Sources */,
 				D95A8EB825A7305100E56B2D /* SignUpVC.swift in Sources */,
 				D978D97A25BE159200F2876C /* Trip.swift in Sources */,
 				D93CB68E25A9CEF00000166F /* DatabaseManager.swift in Sources */,
