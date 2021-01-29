@@ -45,6 +45,7 @@ class HomeVC: UIViewController {
             if user?.accountType == .passenger {
                 fetchDriverData()
                 configureLocationInputActivationView()
+                observeCurrentTrip()
             } else {
                 observeTrips()
             }
@@ -53,10 +54,16 @@ class HomeVC: UIViewController {
     
     private var trip: Trip? {
         didSet {
-            guard let trip = trip else { return }
-            let vc = PickupVC(trip: trip)
-            vc.delegate = self
-            self.present(vc, animated: true, completion: nil)
+            guard let user = user else { return }
+            
+            if user.accountType == .driver {
+                guard let trip = trip else { return }
+                let vc = PickupVC(trip: trip)
+                vc.delegate = self
+                self.present(vc, animated: true, completion: nil)
+            } else {
+                print("DEBUG: show ride action view for accepted trip..")
+            }
         }
     }
     
@@ -242,6 +249,16 @@ class HomeVC: UIViewController {
     func observeTrips() {
         Service.shared.observeTrips { (trip) in
             self.trip = trip
+        }
+    }
+    
+    func observeCurrentTrip() {
+        Service.shared.observeCurrentTrip { (trip) in
+            self.trip = trip
+            
+            if trip.state == .accepted {
+                self.shouldPresentLoadingView(false)
+            }
         }
     }
     
@@ -461,13 +478,16 @@ extension HomeVC: RideActionViewDelegate {
         guard let pickupCoordinates = locationManager?.location?.coordinate else { return }
         guard let destinationCoordinates = view.destenation?.coordinate else { return }
         
+        shouldPresentLoadingView(true, message: "Finding your a ride...")
+        
         Service.shared.uploadTrip(pickupCoordinates, destinationCoordinates) { (error, ref) in
             if let error = error {
                 print("DEBUG: Failed to upload trip with error: \(error.localizedDescription)")
                 return
             }
-            
-            print("DEBUG: Did upload trip successfully...")
+            UIView.animate(withDuration: 0.3) {
+                self.rideActionView.frame.origin.y = self.view.frame.height
+            }
         }
     }
 }
