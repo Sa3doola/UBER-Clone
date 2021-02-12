@@ -192,7 +192,6 @@ extension UIViewController {
             indicator.style = .large
             indicator.color = .label
             indicator.center = view.center
-            indicator.tag = 1
             
             let label = UILabel()
             label.text = message
@@ -200,11 +199,10 @@ extension UIViewController {
             label.textColor = .label
             label.textAlignment = .center
             label.alpha = 0.90
-            label.tag = 1
             
             view.addSubview(loadingView)
-            view.addSubview(indicator)
-            view.addSubview(label)
+            loadingView.addSubview(indicator)
+            loadingView.addSubview(label)
             
             label.centerX(inView: view)
             label.anchor(top: indicator.bottomAnchor, paddingTop: 32)

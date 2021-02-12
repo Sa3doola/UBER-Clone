@@ -200,15 +200,26 @@ class HomeVC: UIViewController {
         }, completion: completion)
     }
     
-    func animateRideActionView(shouldShow: Bool, destenation: MKPlacemark? = nil) {
+    func animateRideActionView(shouldShow: Bool, destenation: MKPlacemark? = nil,
+                               config: RideActionViewConfiguration? = nil, user: User? = nil) {
         let yOrigin = shouldShow ? self.view.frame.height - self.rideActionViewHeight : self.view.frame.height
-        
-        if shouldShow {
-            rideActionView.destenation = destenation
-        }
         
         UIView.animate(withDuration: 0.3) {
             self.rideActionView.frame.origin.y = yOrigin
+        }
+        
+        if shouldShow {
+            guard let config = config else { return }
+            
+            if let destenation = destenation {
+                rideActionView.destenation = destenation
+            }
+            
+            if let user = user {
+                rideActionView.user = user
+            }
+            
+            rideActionView.configureUI(withConfig: config)
         }
     }
     
@@ -258,6 +269,12 @@ class HomeVC: UIViewController {
             
             if trip.state == .accepted {
                 self.shouldPresentLoadingView(false)
+                guard let driverUid = trip.driverUid else { return }
+                
+                DatabaseManager.shared.fetchUserData(uid: driverUid) { driver in
+                    self.animateRideActionView(shouldShow: true, config: .tripAccepted,
+                                               user: driver)
+                }
             }
         }
     }
@@ -464,7 +481,8 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource {
             
             self.mapView.zoomToFit(annotations: annotations)
             
-            self.animateRideActionView(shouldShow: true, destenation: destenationPlacemark)
+            self.animateRideActionView(shouldShow: true, destenation: destenationPlacemark,
+                                       config: .requsetRide)
         }
     }
 }
@@ -497,8 +515,23 @@ extension HomeVC: RideActionViewDelegate {
 extension HomeVC: PickupVCDelegate {
     
     func didAcceptTrip(_ trip: Trip) {
-        self.trip?.state = .accepted
-        self.dismiss(animated: true, completion: nil)
+        let anno = MKPointAnnotation()
+        anno.coordinate = trip.pickupCoordinates
+        mapView.addAnnotation(anno)
+        mapView.selectAnnotation(anno, animated: true)
+        
+        let placemark = MKPlacemark(coordinate: trip.pickupCoordinates)
+        let mapItem = MKMapItem(placemark: placemark)
+        generatePolyline(toDestenation: mapItem)
+        
+        mapView.zoomToFit(annotations: mapView.annotations)
+        
+        self.dismiss(animated: true) {
+            DatabaseManager.shared.fetchUserData(uid: trip.passengerUid) { passenger in
+                self.animateRideActionView(shouldShow: true, config: .tripAccepted,
+                                           user: passenger)
+            }
+        }
     }
     
 }
