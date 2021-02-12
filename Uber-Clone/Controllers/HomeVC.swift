@@ -508,6 +508,17 @@ extension HomeVC: RideActionViewDelegate {
             }
         }
     }
+    
+    func cancelTrip() {
+        DatabaseManager.shared.cancelTrip { (error, ref) in
+            if let error = error {
+                print("DEBUG: Error deleting trip.. \(error.localizedDescription)")
+                return
+            }
+            
+            self.animateRideActionView(shouldShow: false)
+        }
+    }
 }
 
 // MARK: - PickupVCDelegate
