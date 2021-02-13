@@ -415,6 +415,14 @@ private extension HomeVC {
             mapView.removeOverlay(mapView.overlays[0])
         }
     }
+    
+    func centerMapOnUserLocation() {
+        guard let coordinate = locationManager?.location?.coordinate else { return }
+        let region = MKCoordinateRegion(center: coordinate,
+                                        latitudinalMeters: 2000,
+                                        longitudinalMeters: 2000)
+        mapView.setRegion(region, animated: true)
+    }
 }
 
 // MARK: - Location Input View Delegate
@@ -516,7 +524,12 @@ extension HomeVC: RideActionViewDelegate {
                 return
             }
             
+            self.centerMapOnUserLocation()
             self.animateRideActionView(shouldShow: false)
+            self.removeAnnotationAndOverlays()
+            
+            self.actionbutton.setImage(#imageLiteral(resourceName: "baseline_menu_black_36dp").withRenderingMode(.alwaysOriginal), for: .normal)
+            self.actionBtnConfig = .showMenu
         }
     }
 }
@@ -537,6 +550,14 @@ extension HomeVC: PickupVCDelegate {
         
         mapView.zoomToFit(annotations: mapView.annotations)
         
+        Service.shared.observeTripCancelled(trip: trip) {
+            self.removeAnnotationAndOverlays()
+            self.animateRideActionView(shouldShow: false)
+            self.centerMapOnUserLocation()
+            self.presentAlertController(withtitle: "Oops!",
+                                        message: "The passenger has decided to cancel the ride. press ok to continue.")
+        }
+        
         self.dismiss(animated: true) {
             DatabaseManager.shared.fetchUserData(uid: trip.passengerUid) { passenger in
                 self.animateRideActionView(shouldShow: true, config: .tripAccepted,
@@ -544,5 +565,4 @@ extension HomeVC: PickupVCDelegate {
             }
         }
     }
-    
 }
