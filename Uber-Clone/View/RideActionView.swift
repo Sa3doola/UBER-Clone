@@ -11,6 +11,7 @@ import MapKit
 protocol RideActionViewDelegate: class {
     func uploadTrip(_ view: RideActionView)
     func cancelTrip()
+    func pickupPassenger()
 }
 
 enum RideActionViewConfiguration {
@@ -177,7 +178,7 @@ class RideActionView: UIView {
         case .getDirection:
             print("DEBUG Handle get direction..")
         case .pickup:
-            print("DEBUG Handle pickup..")
+            delegate?.pickupPassenger()
         case .dropOff:
             print("DEBUG Handle drop off..")
             
@@ -231,7 +232,7 @@ class RideActionView: UIView {
                 actionButton.setTitle(buttonAction.description, for: .normal)
             }
             
-            infoViewlabel.text = "En Route To Destenation"
+            titleLabel.text = "En Route To Destenation"
     
         case .endtrip:
             guard let user = user else { return }
@@ -243,6 +244,8 @@ class RideActionView: UIView {
                 buttonAction = .dropOff
                 actionButton.setTitle(buttonAction.description, for: .normal)
             }
+            
+            titleLabel.text = "Arrived at Destination"
         }
     }
 }
