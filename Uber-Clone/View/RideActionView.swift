@@ -16,6 +16,7 @@ protocol RideActionViewDelegate: class {
 enum RideActionViewConfiguration {
     case requsetRide
     case tripAccepted
+    case driverArrived
     case pickupPassenger
     case tripInProgress
     case endtrip
@@ -57,11 +58,14 @@ class RideActionView: UIView {
             addressLabel.text = destenation?.address
         }
     }
-    
-    var config = RideActionViewConfiguration()
+
     var buttonAction = ButtonAction()
     weak var delegate: RideActionViewDelegate?
     var user: User?
+    
+    var config = RideActionViewConfiguration() {
+        didSet { configureUI(withConfig: config) }
+    }
     
     private let titleLabel: UILabel = {
         let lbl = UILabel()
@@ -107,8 +111,6 @@ class RideActionView: UIView {
         
         return view
     }()
-    
-    
     
     private let actionButton: UIButton = {
         let btn = UIButton(type: .system)
@@ -184,7 +186,7 @@ class RideActionView: UIView {
     
     // MARK: - Helper Functions
     
-    func configureUI(withConfig config: RideActionViewConfiguration) {
+    private func configureUI(withConfig config: RideActionViewConfiguration) {
         switch config {
         case .requsetRide:
             buttonAction = .requsetRide
@@ -209,6 +211,14 @@ class RideActionView: UIView {
             titleLabel.text = "Arrived At Passenger Location"
             buttonAction = .pickup
             actionButton.setTitle(buttonAction.description, for: .normal)
+            
+        case .driverArrived:
+            guard let user = user else { return }
+            
+            if user.accountType == .driver {
+                titleLabel.text = "Driver Has Arrived"
+                addressLabel.text = "Please meet driver at pickup location"
+            }
             
         case .tripInProgress:
             guard let user = user else { return }

@@ -8,6 +8,7 @@
 import UIKit
 import CoreLocation
 import Firebase
+import GeoFire
 
 struct Service {
     
@@ -60,4 +61,9 @@ struct Service {
         }
     }
     
+    func updateDriverLocation(location: CLLocation) {
+        guard let uid = Auth.auth().currentUser?.uid else { return }
+        let geofire = GeoFire(firebaseRef: REF_DRIVER_LOCATIONS)
+        geofire.setLocation(location, forKey: uid)
+    }
 }
