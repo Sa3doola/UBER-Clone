@@ -311,7 +311,15 @@ class HomeVC: UIViewController {
             case .arrivedAtDestination:
                 self.rideActionView.config = .endtrip
             case .completed:
-                break
+                DatabaseManager.shared.deleteTrip { (error, ref) in
+                    self.animateRideActionView(shouldShow: false)
+                    self.centerMapOnUserLocation()
+                    self.configureActionButton(config: .showMenu)
+                    self.inputActivationView.alpha = 1
+                    self.presentAlertController(withtitle: "Trip Completed",
+                                                message: "We hope you enjoyed your trip 😀")
+                    
+                }
             }
         }
     }
@@ -328,6 +336,8 @@ class HomeVC: UIViewController {
             
             self.setCustomRegion(withType: .destination, coordinates: trip.destinationCoordinates)
             self.generatePolyline(toDestenation: mapItem)
+            
+            self.mapView.zoomToFit(annotations: self.mapView.annotations)
         }
     }
     
@@ -610,7 +620,7 @@ extension HomeVC: RideActionViewDelegate {
     }
     
     func cancelTrip() {
-        DatabaseManager.shared.cancelTrip { (error, ref) in
+        DatabaseManager.shared.deleteTrip { (error, ref) in
             if let error = error {
                 print("DEBUG: Error deleting trip.. \(error.localizedDescription)")
                 return
@@ -624,6 +634,15 @@ extension HomeVC: RideActionViewDelegate {
             self.actionBtnConfig = .showMenu
             
             self.inputActivationView.alpha = 1
+        }
+    }
+    
+    func dropOffPassenger() {
+        guard let trip = trip else { return }
+        DatabaseManager.shared.updateTripState(trip: trip, state: .completed) { (error, ref) in
+            self.removeAnnotationAndOverlays()
+            self.centerMapOnUserLocation()
+            self.animateRideActionView(shouldShow: false)
         }
     }
 }
