@@ -9,6 +9,8 @@ import CoreLocation
 import Firebase
 import GeoFire
 
+// MARK: - DatabaseRefs
+
 let DB_REF = Database.database().reference()
 let REF_USERS = DB_REF.child("Users")
 let REF_DRIVER_LOCATIONS = DB_REF.child("diver-locations")
@@ -36,34 +38,6 @@ public class DatabaseManager {
             let user = User(uid: uId, dicationary: dictionary)
             
             completion(user)
-        }
-    }
-    
-    func fetchDriver(location: CLLocation, completion: @escaping (User) -> Void) {
-        let geofire = GeoFire(firebaseRef: REF_DRIVER_LOCATIONS)
-        
-        REF_DRIVER_LOCATIONS.observe(.value) { (snapshot) in
-            geofire.query(at: location, withRadius: 50).observe(.keyEntered, with: { (uid, location) in
-                self.fetchUserData(uid: uid) { (user) in
-                    var driver = user
-                    driver.location = location
-                    completion(driver)
-                }
-            })
-        }
-    }
-    
-    func deleteTrip(completion: @escaping (Error?, DatabaseReference) -> Void) {
-        guard let uid = Auth.auth().currentUser?.uid else { return }
-        REF_TRIPS.child(uid).removeValue(completionBlock: completion)
-    }
-    
-    func updateTripState(trip: Trip, state: TripState,
-                         completion: @escaping(Error?, DatabaseReference) -> Void) {
-        REF_TRIPS.child(trip.passengerUid).child("state").setValue(state.rawValue, withCompletionBlock: completion)
-        
-        if state == .completed {
-            REF_TRIPS.child(trip.passengerUid).removeAllObservers()
         }
     }
 }
