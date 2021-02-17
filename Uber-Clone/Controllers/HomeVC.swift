@@ -26,6 +26,10 @@ private enum AnnotaionType: String {
     case destination
 }
 
+protocol HomeVCDelegate: class {
+    func handleMenuToggle()
+}
+
 class HomeVC: UIViewController {
     
     // MARK: - Properties
@@ -42,8 +46,10 @@ class HomeVC: UIViewController {
     private final let rideActionViewHeight: CGFloat = 300
     private var actionBtnConfig = actionButtonConfiguration()
     private var route: MKRoute?
+    
+    weak var delegate: HomeVCDelegate?
 
-    private var user: User? {
+    var user: User? {
         didSet {
             locationInputView.user = user
             
@@ -83,18 +89,15 @@ class HomeVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         enableLocationServices()
+        configureUI()
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        checkIfAuthenticated()
-    }
     
     // MARK: - Selectors
     @objc func actionButtonPressed() {
         switch actionBtnConfig {
         case .showMenu:
-            print("DEBUG: Handle show menu..")
+            delegate?.handleMenuToggle()
         case .dismissActionView:
             removeAnnotationAndOverlays()
             mapView.showAnnotations(mapView.annotations, animated: true)
@@ -108,11 +111,6 @@ class HomeVC: UIViewController {
     }
     
     // MARK: - Helper Functions
-    
-    func configure() {
-        configureUI()
-        fetchUserData()
-    }
     
     func configureUI() {
         configureMapView()
@@ -346,40 +344,6 @@ class HomeVC: UIViewController {
         }
     }
     
-    // MARK: - Shared API
-    
-    func fetchUserData() {
-        guard let currentUid = Auth.auth().currentUser?.uid else { return }
-        DatabaseManager.shared.fetchUserData(uid: currentUid) { (user) in
-            self.user = user
-        }
-    }
-    
-    func checkIfAuthenticated() {
-        if Auth.auth().currentUser?.uid == nil {
-            DispatchQueue.main.async {
-                let vc = LoginVC()
-                let nav = UINavigationController(rootViewController: vc)
-                nav.modalPresentationStyle = .fullScreen
-                self.present(nav, animated: false, completion: nil)
-            }
-        } else {
-            configure()
-        }
-    }
-    
-    func logOut() {
-        AuthManager.shared.logOut { (success) in
-            DispatchQueue.main.async {
-                if success {
-                    let vc = LoginVC()
-                    let nav = UINavigationController(rootViewController: vc)
-                    nav.modalPresentationStyle = .fullScreen
-                    self.present(nav, animated: false, completion: nil)
-                } else {
-                    print("Failed to log out....")
-                    return
-                } } } }
 }
 
 // MARK: - MapView Delegate

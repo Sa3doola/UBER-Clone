@@ -107,7 +107,8 @@ class SignUpVC: UIViewController {
             var message: String = ""
             
             if (success) {
-                
+                guard let controller = UIApplication.shared.keyWindow?.rootViewController as? ContainerVC else { return }
+                controller.configure()
                 strongSelf.dismiss(animated: true, completion: nil)
             } else {
                 message = "There was an error"

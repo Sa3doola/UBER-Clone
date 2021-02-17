@@ -76,14 +76,12 @@ class LoginVC: UIViewController {
         guard let email = emailTextField.text,
               let password = passwordTextField.text, password.count >= 8 else { return }
         
-        AuthManager.shared.logIn(email: email, password: password) { [weak self] (success) in
-            guard let strongSelf = self else { return }
+        AuthManager.shared.logIn(email: email, password: password) { (success) in
             DispatchQueue.main.async {
                 if success {
-                    let vc = HomeVC()
-                    vc.modalPresentationStyle = .fullScreen
-                    vc.configure()
-                    strongSelf.present(vc, animated: true, completion: nil)
+                    guard let controller = UIApplication.shared.keyWindow?.rootViewController as? ContainerVC else { return }
+                    controller.configure()
+                    self.dismiss(animated: true, completion: nil)
                 }
             }
         }

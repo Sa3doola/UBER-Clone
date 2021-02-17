@@ -10,7 +10,7 @@ import MapKit
 
 // MARK: - UIView
 extension UIView {
-        
+    
     func anchor(top: NSLayoutYAxisAnchor? = nil,
                 left: NSLayoutXAxisAnchor? = nil,
                 bottom: NSLayoutYAxisAnchor? = nil,
@@ -239,6 +239,19 @@ extension UIViewController {
                     }
                 }
             }
+        }
+    }
+}
+
+
+// MARK: - UIWindow
+
+extension UIWindow {
+    static var key: UIWindow? {
+        if #available(iOS 13, *) {
+            return UIApplication.shared.windows.first { $0.isKeyWindow }
+        } else {
+            return UIApplication.shared.keyWindow
         }
     }
 }
