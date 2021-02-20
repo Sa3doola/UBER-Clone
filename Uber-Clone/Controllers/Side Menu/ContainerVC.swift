@@ -165,7 +165,12 @@ extension ContainerVC: MenuVCDelegate {
             case .yourTrips:
                 break
             case .settings:
-                break
+                guard let user = self.user else { return }
+                let vc = SettingsVC(user: user)
+                let navVC = UINavigationController(rootViewController: vc)
+                navVC.modalPresentationStyle = .fullScreen
+                navVC.modalTransitionStyle = .crossDissolve
+                self.present(navVC, animated: true, completion: nil)
             case .logout:
                 let alert = UIAlertController(title: nil,
                                               message: "Are you sure you want to log out?",

@@ -99,7 +99,8 @@ extension MenuVC: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifire, for: indexPath)
-        
+        cell.backgroundColor = .white
+        cell.textLabel?.textColor = .black
         guard let option = MenuOptions(rawValue: indexPath.row) else { return UITableViewCell() }
         cell.textLabel?.text = option.description
         return cell

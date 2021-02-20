@@ -19,9 +19,16 @@ class LocationCell: UITableViewCell {
         }
     }
     
+    var type: LocationType? {
+        didSet {
+            titleLabel.text = type?.description
+            addressLabel.text = type?.subTitle
+        }
+    }
+    
     var titleLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 14)
+        label.font = UIFont.systemFont(ofSize: 16)
         return label
     }()
     
