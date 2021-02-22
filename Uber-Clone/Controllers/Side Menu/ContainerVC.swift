@@ -146,6 +146,14 @@ class ContainerVC: UIViewController {
     }
 }
 
+// MARK: - SettingsVC Delegate
+
+extension ContainerVC: SettingsVCDelegate {
+    func updateUser(_ controller: SettingsVC) {
+        self.user = controller.user
+    }
+}
+
 // MARK: - HomeVC Delegate
 
 extension ContainerVC: HomeVCDelegate {
@@ -167,6 +175,7 @@ extension ContainerVC: MenuVCDelegate {
             case .settings:
                 guard let user = self.user else { return }
                 let vc = SettingsVC(user: user)
+                vc.delegate = self
                 let navVC = UINavigationController(rootViewController: vc)
                 navVC.modalPresentationStyle = .fullScreen
                 navVC.modalTransitionStyle = .crossDissolve

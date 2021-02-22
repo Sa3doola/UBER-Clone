@@ -19,15 +19,24 @@ struct User {
     var accountType: AccountType!
     let uid: String
     var location: CLLocation?
+    var homeLocation: String?
+    var workLocation: String?
     
     init(uid: String, dicationary: [String: Any]) {
         self.uid = uid
         self.fullName = dicationary["FullName"] as? String ?? ""
         self.email = dicationary["email"] as? String ?? ""
         
+        if let home = dicationary["HomeLocation"] as? String {
+            self.homeLocation = home
+        }
+        
+        if let work = dicationary["WorkLocation"] as? String {
+            self.workLocation = work
+        }
+        
         if let index = dicationary["accountType"] as? Int {
             self.accountType = AccountType(rawValue: index)
         }
     }
-    
 }

@@ -9,6 +9,10 @@ import UIKit
 
 private let reuseIDCell = "LocationCell"
 
+protocol SettingsVCDelegate: class {
+    func updateUser(_ contoller: SettingsVC)
+}
+
 enum LocationType: Int, CaseIterable, CustomStringConvertible {
     case home
     case work
@@ -31,8 +35,10 @@ enum LocationType: Int, CaseIterable, CustomStringConvertible {
 class SettingsVC: UITableViewController {
     
     // MARK: - Properties
-    private let user: User
+    var user: User
     private let locationManager = LocationHandler.shared.locationManager
+    weak var delegate: SettingsVCDelegate?
+    var userInfoUpdated = false
     
     private lazy var infoHeader: UserInfoHeader = {
         let frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 100)
@@ -59,6 +65,15 @@ class SettingsVC: UITableViewController {
     
     // MARK: - Hepler Functions
     
+    func locationText(forType type: LocationType) -> String{
+        switch type {
+        case .home:
+            return user.homeLocation ?? type.subTitle
+        case .work:
+            return user.workLocation ?? type.subTitle
+        }
+    }
+    
     func configureTableView() {
         tableView.rowHeight = 60
         tableView.register(LocationCell.self, forCellReuseIdentifier: reuseIDCell)
@@ -80,6 +95,10 @@ class SettingsVC: UITableViewController {
     // MARK: - Selectors
     
     @objc func handleDismissal() {
+        if userInfoUpdated {
+            delegate?.updateUser(self)
+        }
+        
         self.dismiss(animated: true, completion: nil)
     }
 }
@@ -113,8 +132,8 @@ extension SettingsVC {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: reuseIDCell, for: indexPath) as! LocationCell
         guard let type = LocationType(rawValue: indexPath.row) else { return cell }
-        cell.type = type
-        
+        cell.titleLabel.text = type.description
+        cell.addressLabel.text = locationText(forType: type)
         return cell
     }
     
@@ -122,7 +141,31 @@ extension SettingsVC {
         guard let type = LocationType(rawValue: indexPath.row) else { return }
         guard let location = locationManager?.location else { return }
         let vc = AddLocationVC(type: type, location: location)
+        vc.delegate = self
         let navVC = UINavigationController(rootViewController: vc)
         present(navVC, animated: true, completion: nil)
+    }
+}
+
+// MARK: - AddLocation Delegate
+
+extension SettingsVC: AddLocationVCDelegate {
+    func updateLocation(locationString: String, type: LocationType) {
+        PassengerService.shared.saveLocation(locationString: locationString, type: type) { (error, ref) in
+            if let error = error {
+                print("DEBUG: Can not save location \(error.localizedDescription)")
+                return
+            }
+            self.dismiss(animated: true, completion: nil)
+            self.userInfoUpdated = true
+            switch type {
+            case .home:
+                self.user.homeLocation = locationString
+            case .work:
+                self.user.workLocation = locationString
+            }
+            
+            self.tableView.reloadData()
+        }
     }
 }

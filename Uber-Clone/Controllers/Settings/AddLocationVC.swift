@@ -10,6 +10,10 @@ import MapKit
 
 private let reuseID = "AddLocationCell"
 
+protocol AddLocationVCDelegate: class {
+    func updateLocation(locationString: String, type: LocationType)
+}
+
 class AddLocationVC: UITableViewController {
     
     // MARK: - Properties
@@ -21,6 +25,8 @@ class AddLocationVC: UITableViewController {
     }
     private let type: LocationType
     private let location: CLLocation
+    
+    weak var delegate: AddLocationVCDelegate?
     
     // MARK: - LifeCycle
     
@@ -83,6 +89,15 @@ extension AddLocationVC {
         cell.textLabel?.text = results.title
         cell.detailTextLabel?.text = results.subtitle
         return cell
+    }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let results = searchResults[indexPath.row]
+        let title = results.title
+        let subtitle = results.subtitle
+        let locationString = title + " " + subtitle
+        let trimmedLocation = locationString.replacingOccurrences(of: ", Egypt", with: "")
+        delegate?.updateLocation(locationString: trimmedLocation, type: type)
     }
 }
 
