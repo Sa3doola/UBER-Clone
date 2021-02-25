@@ -42,6 +42,7 @@ class HomeVC: UIViewController {
     private let rideActionView = RideActionView()
     private let tableView = UITableView()
     private var searchResult = [MKPlacemark]()
+    private var savedLocaions = [MKPlacemark]()
     private final let locationInputViewHeight: CGFloat = 200
     private final let rideActionViewHeight: CGFloat = 300
     private var actionBtnConfig = actionButtonConfiguration()
@@ -57,6 +58,7 @@ class HomeVC: UIViewController {
                 fetchDriverData()
                 configureLocationInputActivationView()
                 observeCurrentTrip()
+                configureSavedUserLocations()
             } else {
                 observeTrips()
             }
@@ -144,6 +146,29 @@ class HomeVC: UIViewController {
         mapView.showsUserLocation = true
         mapView.userTrackingMode = .follow
         mapView.delegate = self
+    }
+    
+    func configureSavedUserLocations() {
+        guard let user = user else { return }
+        savedLocaions.removeAll()
+        
+        if let homeLocation = user.homeLocation {
+            geocodeAddressString(address: homeLocation)
+        }
+        
+        if let workLocation = user.workLocation {
+            geocodeAddressString(address: workLocation)
+        }
+    }
+    
+    func geocodeAddressString(address: String) {
+        let geocode = CLGeocoder()
+        geocode.geocodeAddressString(address) { (placemarks, error) in
+            guard let clPlacemark = placemarks?.first else { return }
+            let placemark = MKPlacemark(placemark: clPlacemark)
+            self.savedLocaions.append(placemark)
+            self.tableView.reloadData()
+        }
     }
     
     func configureLocationInputView() {
@@ -531,7 +556,7 @@ extension HomeVC: LocationInputViewDelegate {
 extension HomeVC: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return "Test"
+        return section == 0 ? "Saved Locations" : "Results"
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -539,11 +564,16 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return section == 0 ? 2 : searchResult.count
+        return section == 0 ? savedLocaions.count : searchResult.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
         let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath) as! LocationCell
+        
+        if indexPath.section == 0 {
+            cell.placeMark = savedLocaions[indexPath.row]
+        }
         
         if indexPath.section == 1 {
             cell.placeMark = searchResult[indexPath.row]
@@ -553,7 +583,7 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let destenationPlacemark = searchResult[indexPath.row]
+        let destenationPlacemark = indexPath.section == 0 ? savedLocaions[indexPath.row] : searchResult[indexPath.row]
         
         configureActionButton(config: .dismissActionView)
         
