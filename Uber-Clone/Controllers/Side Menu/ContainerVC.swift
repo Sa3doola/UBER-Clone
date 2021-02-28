@@ -55,12 +55,7 @@ class ContainerVC: UIViewController {
     
     func checkIfAuthenticated() {
         if Auth.auth().currentUser?.uid == nil {
-            DispatchQueue.main.async {
-                let vc = LoginVC()
-                let nav = UINavigationController(rootViewController: vc)
-                nav.modalPresentationStyle = .fullScreen
-                self.present(nav, animated: false, completion: nil)
-            }
+            presentLoginVC()
         } else {
             configure()
         }
@@ -68,18 +63,25 @@ class ContainerVC: UIViewController {
     
     func logOut() {
         AuthManager.shared.logOut { (success) in
-            DispatchQueue.main.async {
-                if success {
-                    let vc = LoginVC()
-                    let nav = UINavigationController(rootViewController: vc)
-                    nav.modalPresentationStyle = .fullScreen
-                    self.present(nav, animated: false, completion: nil)
-                } else {
-                    print("Failed to log out....")
-                    return
-                } } } }
+            if success {
+                presentLoginVC()
+            } else {
+                print("Failed lo Log Out...")
+            }
+        }
+    }
     
     //MARK: - Helper Functions
+    
+    func presentLoginVC() {
+        DispatchQueue.main.async {
+            let vc = LoginVC()
+            let nav = UINavigationController(rootViewController: vc)
+            nav.isModalInPresentation = true
+            nav.modalPresentationStyle = .fullScreen
+            self.present(nav, animated: false, completion: nil)
+        }
+    }
     
     func configure() {
         configureHomeVC()

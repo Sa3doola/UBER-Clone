@@ -22,6 +22,8 @@ struct User {
     var homeLocation: String?
     var workLocation: String?
     
+    var firstInitial: String { return String(fullName.prefix(1)) }
+    
     init(uid: String, dicationary: [String: Any]) {
         self.uid = uid
         self.fullName = dicationary["FullName"] as? String ?? ""
