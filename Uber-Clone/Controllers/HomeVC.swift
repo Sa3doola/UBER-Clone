@@ -378,7 +378,6 @@ class HomeVC: UIViewController {
                                         message: "The passenger has decided to cancel the ride. press ok to continue.")
         }
     }
-    
 }
 
 // MARK: - MapView Delegate
@@ -442,8 +441,6 @@ extension HomeVC: CLLocationManagerDelegate {
                 self.rideActionView.config = .endtrip
             }
         }
-        
-        
     }
     
     func enableLocationServices() {

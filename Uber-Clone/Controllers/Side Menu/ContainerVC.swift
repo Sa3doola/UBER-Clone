@@ -7,9 +7,12 @@
 
 import UIKit
 import Firebase
+import CoreLocation
 
 class ContainerVC: UIViewController {
     //MARK: - Properties
+    
+    private let locationManager = LocationHandler.shared.locationManager
     
     private let homeVC = HomeVC()
     private var menuVC: MenuVC!
@@ -33,6 +36,7 @@ class ContainerVC: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        enableLocationServices()
         checkIfAuthenticated()
     }
     
@@ -193,6 +197,32 @@ extension ContainerVC: MenuVCDelegate {
                 alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
                 self.present(alert, animated: true, completion: nil)
             }
+        }
+    }
+}
+
+// MARK: - Location Services
+
+extension ContainerVC: CLLocationManagerDelegate {
+    
+    func enableLocationServices() {
+        locationManager?.delegate = self
+        
+        switch CLLocationManager.authorizationStatus() {
+        case .notDetermined:
+            print("Not determind")
+            locationManager?.requestWhenInUseAuthorization()
+        case .restricted, .denied:
+            break
+        case .authorizedAlways:
+            print("Auth always ")
+            locationManager?.startUpdatingLocation()
+            locationManager?.desiredAccuracy = kCLLocationAccuracyBest
+        case .authorizedWhenInUse:
+            print("Auth When in Use")
+            locationManager?.requestAlwaysAuthorization()
+        @unknown default:
+            break
         }
     }
 }
